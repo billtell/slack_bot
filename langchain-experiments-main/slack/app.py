@@ -26,6 +26,7 @@ SLACK_BOT_USER_ID = os.environ["SLACK_BOT_USER_ID"]
 # Set up the Flask app
 app = Flask(__name__)
 
+
 # Set up the Slack API client
 client = WebClient(token=SLACK_BOT_TOKEN)
 
