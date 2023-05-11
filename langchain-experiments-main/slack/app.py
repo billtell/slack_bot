@@ -29,6 +29,10 @@ app = Flask(__name__)
 # Set up the Slack API client
 client = WebClient(token=SLACK_BOT_TOKEN)
 
+#get port from environment variable or choose 3000 as local default
+port = int(os.environ.get("PORT", 3000))
+
+
 # def get_bot_user_id():
 #     """
 #     Get the bot user ID using the Slack API.
@@ -139,7 +143,7 @@ def handle_slack_command():
             return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=port)
 
 
 
