@@ -7,7 +7,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, request, jsonify
 from functions import draft_email
 
-# Load environment variables from .env file
+# # Load environment variables from .env file
 load_dotenv(find_dotenv())
 
 # Set Slack API credentials
