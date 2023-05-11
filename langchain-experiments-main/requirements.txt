@@ -5,4 +5,5 @@ google-api-python-client # Google API
 google-search-results # SerpAPI
 youtube-transcript-api
 wikipedia
-pandas # Data analysis
+pandas 1.2.3 # Data analysis
+gunicorn # Web server
