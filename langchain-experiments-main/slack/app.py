@@ -93,5 +93,5 @@ def index():
 
 # Run the Flask app
 if __name__ == "__main__":
-    flask_app.run(threaded=True, port=5000)
+    flask_app.run()
   
