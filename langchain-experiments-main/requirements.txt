@@ -5,5 +5,5 @@ google-api-python-client # Google API
 google-search-results # SerpAPI
 youtube-transcript-api
 wikipedia
-pandas==latest # Data analysis
+pandas # Data analysis
 gunicorn # Web server
