@@ -77,12 +77,10 @@ def handle_mentions(body, say):
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
     """
-    Route for handling Slack events.
-    This function passes the incoming HTTP request to the SlackRequestHandler for processing.
-
-    Returns:
-        Response: The result of handling the request.
+    Endpoint to receive events from Slack.
     """
+
+    # Convert the request data into JSON
     return handler.handle(request)
 
 
