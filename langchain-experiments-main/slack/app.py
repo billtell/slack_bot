@@ -86,10 +86,10 @@ def slack_events():
     return handler.handle(request)
 
 
-# A welcome message to test our server
-@app.route('/')
-def index():
-    return "<h1>Welcome to our server !!</h1>"
+#message to the screen when the app is running
+@flask_app.route("/")
+def hello():
+    return "Hello there! I'm a Slack bot."
 
 # Run the Flask app
 if __name__ == "__main__":
