@@ -60,7 +60,7 @@ def handle_mentions(event, say):
     response = draft_email(text)
     say(response)
 
-@flask_app.route("/slack/events", methods=["POST"])
+@app.route("/slack/events", methods=["POST"])
 def slack_events():
     """
     Endpoint to receive events from Slack.
@@ -70,7 +70,7 @@ def slack_events():
     return handler.handle(request)
 
 # Message to the screen when the app is running
-@flask_app.route("/")
+@app.route("/")
 def hello():
     return "Hello there! I'm a Slack bot."
 
