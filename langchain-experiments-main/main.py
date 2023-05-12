@@ -28,12 +28,9 @@ SLACK_BOT_USER_ID = os.environ.get("SLACK_BOT_USER_ID")
 app = Flask(__name__)
 
 
+
 # Set up the Slack API client
 client = WebClient(token=SLACK_BOT_TOKEN)
-
-#get port from environment variable or choose 3000 as local default
-port = int(os.environ.get("PORT", 3000))
-
 
 # def get_bot_user_id():
 #     """
@@ -123,29 +120,29 @@ def handle_slack_event():
         except SlackApiError as e:
             return jsonify({"error": str(e)}), 500
 
-# Define a route to handle Slack commands
-@app.route("/slack/commands", methods=["POST"])
-def handle_slack_command():
-    # Parse the incoming request
-    payload = request.form
-    command = payload["command"]
-    text = payload["text"]
-    user_id = payload["user_id"]
+# # Define a route to handle Slack commands
+# @app.route("/slack/commands", methods=["POST"])
+# def handle_slack_command():
+#     # Parse the incoming request
+#     payload = request.form
+#     command = payload["command"]
+#     text = payload["text"]
+#     user_id = payload["user_id"]
 
-    # Handle the command
-    if command == "/echo":
-        try:
-            # Send a response back to Slack
-            response = client.chat_postMessage(
-                channel=user_id,
-                text=text
-            )
-            return jsonify(response)
-        except SlackApiError as e:
-            return jsonify({"error": str(e)}), 500
+#     # Handle the command
+#     if command == "/echo":
+#         try:
+#             # Send a response back to Slack
+#             response = client.chat_postMessage(
+#                 channel=user_id,
+#                 text=text
+#             )
+#             return jsonify(response)
+#         except SlackApiError as e:
+#             return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, port=port)
+    app.run(debug=True)
 
 
 
