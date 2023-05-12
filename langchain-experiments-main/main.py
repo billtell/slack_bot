@@ -22,8 +22,8 @@ app = App(token=SLACK_BOT_TOKEN)
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
 
-# Set up the Slack API client
-client = app.client
+# # Set up the Slack API client
+# client = WebClient(token=SLACK_BOT_TOKEN)
 
 # #create a route for the slash command
 # @flask_app.route("/slack/message_actions", methods=["POST"])
