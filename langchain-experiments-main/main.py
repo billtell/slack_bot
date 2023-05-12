@@ -8,7 +8,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, request, jsonify
 from functions import draft_email
 
-# # Load environment variables from .env file
+# Load environment variables from .env file
 load_dotenv(find_dotenv())
 
 # Set Slack API credentials
@@ -16,7 +16,7 @@ SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET")
 SLACK_BOT_USER_ID = os.environ.get("SLACK_BOT_USER_ID")
 
-# # Initialize the Slack app
+# Initialize the Slack app
 app = App(token=SLACK_BOT_TOKEN)
 
 # Initialize the Flask app
@@ -25,7 +25,7 @@ flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
 
 # Set up the Slack API client
-client = WebClient(token=SLACK_BOT_TOKEN)
+client = app.client
 
 def my_function(text):
     """
@@ -41,27 +41,24 @@ def my_function(text):
     response = text.upper()
     return response
 
-
-@flask_app.event("app_mention")
-def handle_mentions(body, say):
+@app.event("app_mention")
+def handle_mentions(event, say):
     """
     Event listener for mentions in Slack.
     When the bot is mentioned, this function processes the text and sends a response.
 
     Args:
-        body (dict): The event data received from Slack.
+        event (dict): The event data received from Slack.
         say (callable): A function for sending a response to the channel.
     """
-    text = body["event"]["text"]
+    text = event["text"]
 
     mention = f"<@{SLACK_BOT_USER_ID}>"
     text = text.replace(mention, "").strip()
 
     say("Sure, I'll get right on that!")
-    # response = my_function(text)
     response = draft_email(text)
     say(response)
-
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
@@ -72,8 +69,7 @@ def slack_events():
     # Convert the request data into JSON
     return handler.handle(request)
 
-
-#message to the screen when the app is running
+# Message to the screen when the app is running
 @flask_app.route("/")
 def hello():
     return "Hello there! I'm a Slack bot."
@@ -81,11 +77,3 @@ def hello():
 # Run the Flask app
 if __name__ == "__main__":
     flask_app.run()
-
-
-
-
-
-
-
-
