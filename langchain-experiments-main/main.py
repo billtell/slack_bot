@@ -42,7 +42,7 @@ def my_function(text):
     return response
 
 
-@app.event("app_mention")
+@flask_app.event("app_mention")
 def handle_mentions(body, say):
     """
     Event listener for mentions in Slack.
