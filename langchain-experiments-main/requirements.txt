@@ -7,3 +7,6 @@ youtube-transcript-api
 wikipedia
 pandas # Data analysis
 gunicorn # Web server
+slack-sdk 
+slack-bolt 
+flask
