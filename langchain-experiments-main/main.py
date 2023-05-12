@@ -8,13 +8,10 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, request, jsonify
 from functions import draft_email
 
-# Load environment variables from .env file
-load_dotenv(find_dotenv())
-
-# Set Slack API credentials
-SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET")
-SLACK_BOT_USER_ID = os.environ.get("SLACK_BOT_USER_ID")
+# get the tokens from the config vars
+SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_SIGNING_SECRET = os.environ["SLACK_SIGNING_SECRET"]
+SLACK_BOT_USER_ID = os.environ["SLACK_BOT_USER_ID"]
 
 # Initialize the Slack app
 app = App(token=SLACK_BOT_TOKEN)
@@ -60,7 +57,7 @@ def handle_mentions(event, say):
     response = draft_email(text)
     say(response)
 
-@app.route("/slack/events", methods=["POST"])
+@flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
     """
     Endpoint to receive events from Slack.
@@ -70,7 +67,7 @@ def slack_events():
     return handler.handle(request)
 
 # Message to the screen when the app is running
-@app.route("/")
+@flask_app.route("/")
 def hello():
     return "Hello there! I'm a Slack bot."
 
