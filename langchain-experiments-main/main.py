@@ -101,24 +101,30 @@ client = WebClient(token=SLACK_BOT_TOKEN)
 # if __name__ == "__main__":
 #     flask_app.run()
 
-# Define a route to handle Slack events
-@app.route("/slack/events", methods=["POST"])
-def handle_slack_event():
-    # Parse the incoming request
-    payload = request.json
-    event = payload["event"]
+#make a simple home page to test the app
+@app.route("/")
+def hello():
+    return "Hello there! I'm a Slack bot."
 
-    # Handle the event
-    if event["type"] == "message" and "hello" in event["text"]:
-        try:
-            # Send a response back to Slack
-            response = client.chat_postMessage(
-                channel=event["channel"],
-                text="Hello, world!"
-            )
-            return jsonify(response)
-        except SlackApiError as e:
-            return jsonify({"error": str(e)}), 500
+
+# # Define a route to handle Slack events
+# @app.route("/slack/events", methods=["POST"])
+# def handle_slack_event():
+#     # Parse the incoming request
+#     payload = request.json
+#     event = payload["event"]
+
+#     # Handle the event
+#     if event["type"] == "message" and "hello" in event["text"]:
+#         try:
+#             # Send a response back to Slack
+#             response = client.chat_postMessage(
+#                 channel=event["channel"],
+#                 text="Hello, world!"
+#             )
+#             return jsonify(response)
+#         except SlackApiError as e:
+#             return jsonify({"error": str(e)}), 500
 
 # # Define a route to handle Slack commands
 # @app.route("/slack/commands", methods=["POST"])
