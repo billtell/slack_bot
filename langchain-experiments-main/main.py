@@ -22,47 +22,6 @@ app = App(token=SLACK_BOT_TOKEN)
 flask_app = Flask(__name__)
 handler = SlackRequestHandler(app)
 
-# # Set up the Slack API client
-# client = WebClient(token=SLACK_BOT_TOKEN)
-
-# #create a route for the slash command
-# @flask_app.route("/slack/message_actions", methods=["POST"])
-# def message_actions():
-#     # Parse the request payload
-#     form_json = request.form["payload"]
-#     payload = json.loads(form_json)
-#     # Check to see what the user's selection was and update the message
-#     selection = payload["actions"][0]["value"]
-#     if selection == "yes":
-#         response = "Great! I'll send you a message to get started."
-#     elif selection == "no":
-#         response = "Okay, maybe next time."
-#     else:
-#         response = "Oops, something went wrong."
-#     return jsonify(
-#         replace_original=True,
-#         text=response
-#     )
-
-# # Create a route slack events 
-# @flask_app.route("/slack/events", methods=["POST"])
-# def slack_events():
-#     # Parse the request payload
-#     form_json = request.form["payload"]
-#     payload = json.loads(form_json)
-#     # Check to see what the user's selection was and update the message
-#     selection = payload["actions"][0]["value"]
-#     if selection == "yes":
-#         response = "Great! I'll send you a message to get started."
-#     elif selection == "no":
-#         response = "Okay, maybe next time."
-#     else:
-#         response = "Oops, something went wrong."
-#     return jsonify(
-#         replace_original=True,
-#         text=response
-#     )
-
 # Message to the screen when the app is running
 @flask_app.route("/")
 def hello():
