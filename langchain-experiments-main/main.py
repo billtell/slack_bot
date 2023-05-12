@@ -1,5 +1,6 @@
 import os
 import gunicorn
+import json
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -24,47 +25,43 @@ handler = SlackRequestHandler(app)
 # Set up the Slack API client
 client = app.client
 
-def my_function(text):
-    """
-    Custom function to process the text and return a response.
-    In this example, the function converts the input text to uppercase.
+#create a route for the slash command
+@flask_app.route("/slack/message_actions", methods=["POST"])
+def message_actions():
+    # Parse the request payload
+    form_json = request.form["payload"]
+    payload = json.loads(form_json)
+    # Check to see what the user's selection was and update the message
+    selection = payload["actions"][0]["value"]
+    if selection == "yes":
+        response = "Great! I'll send you a message to get started."
+    elif selection == "no":
+        response = "Okay, maybe next time."
+    else:
+        response = "Oops, something went wrong."
+    return jsonify(
+        replace_original=True,
+        text=response
+    )
 
-    Args:
-        text (str): The input text to process.
-
-    Returns:
-        str: The processed text.
-    """
-    response = text.upper()
-    return response
-
-@app.event("app_mention")
-def handle_mentions(event, say):
-    """
-    Event listener for mentions in Slack.
-    When the bot is mentioned, this function processes the text and sends a response.
-
-    Args:
-        event (dict): The event data received from Slack.
-        say (callable): A function for sending a response to the channel.
-    """
-    text = event["text"]
-
-    mention = f"<@{SLACK_BOT_USER_ID}>"
-    text = text.replace(mention, "").strip()
-
-    say("Sure, I'll get right on that!")
-    response = draft_email(text)
-    say(response)
-
+# Create a route slack events 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
-    """
-    Endpoint to receive events from Slack.
-    """
-
-    # Convert the request data into JSON
-    return handler.handle(request)
+    # Parse the request payload
+    form_json = request.form["payload"]
+    payload = json.loads(form_json)
+    # Check to see what the user's selection was and update the message
+    selection = payload["actions"][0]["value"]
+    if selection == "yes":
+        response = "Great! I'll send you a message to get started."
+    elif selection == "no":
+        response = "Okay, maybe next time."
+    else:
+        response = "Oops, something went wrong."
+    return jsonify(
+        replace_original=True,
+        text=response
+    )
 
 # Message to the screen when the app is running
 @flask_app.route("/")
