@@ -2,11 +2,15 @@ python-dotenv
 langchain
 openai
 google-api-python-client # Google API
-google-search-results # SerpAPI
-youtube-transcript-api
-wikipedia
-pandas # Data analysis
-gunicorn # Web server
-slack-sdk 
-slack-bolt 
-flask
+Flask==2.3.2
+google-api-python-client==1.7.11
+google-auth==1.6.3
+slack_sdk>=3.21.2
+slack_bolt==1.18.0
+gunicorn==20.1.0
+# youtube-transcript-api
+# chromadb
+# tiktoken
+# faiss-cpu
+# wikipedia
+
