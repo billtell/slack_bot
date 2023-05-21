@@ -5,12 +5,10 @@ from slack_bolt.adapter.flask import SlackRequestHandler
 from slack_bolt import App
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, request, Response
-from functions import draft_email, answer_question
+from functions import draft_email, Bee_Bot
 
 # Load environment variables from .env file
 load_dotenv(find_dotenv())
-
-
 
 # Initialize the Slack app
 app = App(token=os.environ["SLACK_BOT_TOKEN"])
@@ -37,21 +35,7 @@ def get_bot_user_id():
 # Get the bot user ID
 BOT_USER_ID = get_bot_user_id()
 
-def my_function(text):
-    """
-    Custom function to process the text and return a response.
-    In this example, the function converts the input text to uppercase.
-
-    Args:
-        text (str): The input text to process.
-
-    Returns:
-        str: The processed text.
-    """
-    response = text.upper()
-    return response
-
-
+# Event listener for messages in Slack
 @app.event("app_mention")
 def handle_mentions(body, say):
     """
@@ -72,10 +56,10 @@ def handle_mentions(body, say):
     mention = f"<@{BOT_USER_ID}>"
     text = text.replace(mention, "").strip()
 
-    say(f"Sure, I'll get right on that, {user_id}!")
-    response = answer_question(text)
-    # response = draft_email(text)
-    say(response)
+    # Process the text
+    respond = Bee_Bot.answer(user_input=text)
+    # Send the response to the channel
+    say(f"Hi {user_id}! :bee:, Buzz buzz!" + respond)
 
 @flask_app.route('/', methods=['GET'])
 def hello_world():
@@ -91,7 +75,6 @@ def slack_events():
         Response: The result of handling the request.
     """
     return handler.handle(request)
-
 
 # Run the Flask app
 if __name__ == "__main__":

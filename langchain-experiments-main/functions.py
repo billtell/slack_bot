@@ -1,3 +1,4 @@
+import os
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import LLMChain
 from dotenv import find_dotenv, load_dotenv
@@ -6,9 +7,42 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
-import openai
+from langchain.schema import HumanMessage, SystemMessage, AIMessage
+
 
 load_dotenv(find_dotenv())
+
+def draft_email(user_input, name="Dave"):
+    chat = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=1)
+
+    template = """
+    
+    You are a helpful assistant that drafts an email reply based on an a new email.
+    
+    Your goal is to help the user quickly create a perfect email reply.
+    
+    Keep your reply short and to the point and mimic the style of the email so you reply in a similar manner to match the tone.
+    
+    Start your reply by saying: "Hi {name}, here's a draft for your reply:". And then proceed with the reply on a new line.
+    
+    Make sure to sign of with {signature}.
+    
+    """
+
+    signature = f"Kind regards, \n\{name}"
+    system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+
+    human_template = "Here's the email to reply to and consider any other comments from the user for reply as well: {user_input}"
+    human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
+
+    chat_prompt = ChatPromptTemplate.from_messages(
+        [system_message_prompt, human_message_prompt]
+    )
+
+    chain = LLMChain(llm=chat, prompt=chat_prompt)
+    response = chain.run(user_input=user_input, signature=signature, name=name)
+
+    return response
 
 # functions for the bot to respond to
 
@@ -23,111 +57,21 @@ load_dotenv(find_dotenv())
 #compare news stories from around the world
 #compare news stories from different sources
 
-#use openai to generate a story
-def generate_story():
-    return openai.Completion.create(
-        engine="davinci",
-        prompt="Once upon a time",
-        temperature=0.7,
-        max_tokens=64,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        stop=["\n"]
-    )
+class Bee_Bot:
+    def __init__(self, bot_user_id):
+        self.bot_user_id = bot_user_id
 
-#use openai to generate a poem
-def generate_poem():
-    return openai.Completion.create(
-        engine="davinci",
-        prompt="Roses are red, violets are blue",
-        temperature=0.7,
-        max_tokens=64,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        stop=["\n"]
-    )
 
-#use openai to generate a joke
-def generate_joke():
-    return openai.Completion.create(
-        engine="davinci",
-        prompt="Why did the chicken cross the road?",
-        temperature=0.7,
-        max_tokens=64,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        stop=["\n"]
-    )
+    def answer(user_input):
 
-#use openai to generate a quote
-def generate_quote():
-    return openai.Completion.create(
-        engine="davinci",
-        prompt="The meaning of life is",
-        temperature=0.7,
-        max_tokens=64,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        stop=["\n"]
-    )
+        chat = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=.8, openai_api_key=os.environ["OPENAI_API"])
 
-#use openai to generate a fact
-def generate_fact():
-    return openai.Completion.create(
-        engine="davinci",
-        prompt="The world is",
-        temperature=0.7,
-        max_tokens=64,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0,
-        stop=["\n"]
-    )
-
-class eventHandler:
-    def __init__(self):
-        self.chatbot = ChatOpenAI()
-        self.chatbot.load()
-        self.chatbot.set_prompt(ChatPromptTemplate())
-        self.chatbot.set_system_message_prompt(SystemMessagePromptTemplate())
-        self.chatbot.set_human_message_prompt(HumanMessagePromptTemplate())
-        self.chatbot.set_cha
-
-    def handle_it(self, request):
-        """
-        Route for handling Slack events.
-        This function passes the incoming HTTP request to the SlackRequestHandler for processing.
-
-        Returns:
-            Response: The result of handling the request.
-        """
-        # Create an instance of SlackRequestHandler.
-        # The SlackRequestHandler class contains several helper functions for verifying requests and getting data from the request.
-        slack_handler = SlackRequestHandler()
-
-        # Verify the request token.
-        # This will abort the request early if the token does not match.
-        slack_handler.verify_token(request)
-
-        # Get the event data from the request.
-        # This will abort the request early if the event type is not "event_callback".
-        event_data = slack_handler.get_event_data(request)
-
-        # Get the event type from the event data.
-        event_type = slack_handler.get_event_type(event_data)
-
-        # Get the user ID of the user who triggered the event.
-        user_id = slack_handler.get_user_id(event_data)
-
-        # Get the channel ID of the channel where the event was triggered.
-        channel_id = slack_handler.get_channel_id(event_data)
-
-        # Get the text from the event that was triggered.
-        text = slack_handler.get_text(event_data)
-
-        #if text is equal to 'summarize'
-        if text == 'summarize':
+        #return the AIMessage
+        reply = chat(
+            [
+            SystemMessage(content="You are a helpful assistant that answers questions on a wide variety of topics."),
+            HumanMessage(content=str(user_input)),
+            ]
+        )
+    
+        return reply.content
